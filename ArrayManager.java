@@ -1,5 +1,6 @@
 import java.util.Random;
-class ArrayManager {
+
+public class ArrayManager {
     private int[] arr;
     private final int arraySize;
     private final int threadCount;
@@ -20,11 +21,11 @@ class ArrayManager {
         arr[negativeElement] = -1 * random.nextInt(1000);
     }
 
-    public void findMin() {
+    public void findMin(Main main) {
         MinFinder[] threads = new MinFinder[threadCount];
         for (int i = 0; i < threads.length; i++) {
             threads[i] = new MinFinder(i * (arraySize / threadCount),
-                    (i + 1) * (arraySize / threadCount), arr, this);
+                    (i + 1) * (arraySize / threadCount), arr, main);
             threads[i].start();
         }
         synchronized (this) {
@@ -59,5 +60,4 @@ class ArrayManager {
         }
         return index;
     }
-
 }
