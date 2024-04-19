@@ -1,14 +1,14 @@
-class MinFinder extends Thread {
+public class MinFinder extends Thread {
     private final int startIndex;
     private final int endIndex;
     private final int[] arr;
-    private final ArrayManager arrayManager;
+    private final Main main;
 
-    public MinFinder(int startIndex, int endIndex, int[] arr, ArrayManager arrayManager) {
+    public MinFinder(int startIndex, int endIndex, int[] arr, Main main) {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.arr = arr;
-        this.arrayManager = arrayManager;
+        this.main = main;
     }
 
     @Override
@@ -19,7 +19,7 @@ class MinFinder extends Thread {
                 localMin = arr[i];
             }
         }
-        Main.updateMin(localMin);
-        arrayManager.threadFinished();
+        main.updateMin(localMin);
+        main.threadFinished();
     }
 }
