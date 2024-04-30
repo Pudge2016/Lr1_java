@@ -1,21 +1,36 @@
-class Consumer implements Runnable {
-    private final Manage manage;
-    private final int totalProducts;
 
-    public Consumer(Manage manage, int totalProducts) {
-        this.manage = manage;
-        this.totalProducts = totalProducts;
+public class Consumer implements Runnable {
+    private final int itemNumbers;
+    private final Manager manager;
+    private final  int id;
+
+    public Consumer(int itemNumbers, Manager manager, int id) {
+        this.itemNumbers = itemNumbers;
+        this.manager = manager;
+        this.id = id;
+
+        new Thread(this).start();
     }
 
     @Override
     public void run() {
-        try {
-            for (int i = 0; i < totalProducts; i++) {
-                manage.consume(i);
-                Thread.sleep(200); // Simulating consumption time
+        for (int i = 0; i < itemNumbers; i++) {
+            String item;
+            try {
+                manager.empty.acquire();
+                Thread.sleep(100);
+                manager.access.acquire();
+
+                item = manager.storage.get(0);
+                manager.storage.remove(0);
+                System.out.println("Consumer "+id +" Took " + item);
+
+                manager.access.release();
+                manager.full.release();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }
