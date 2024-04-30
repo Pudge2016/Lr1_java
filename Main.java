@@ -1,22 +1,21 @@
+import java.lang.reflect.Array;
+
 public class Main {
+
     public static void main(String[] args) {
-        int manageCapacity = 2;
-        int totalProducts = 10;
-        int totalProducers = 3;
-        int totalConsumers = 4; 
+        int storageSize = 5;
+        final int consumers = 4;
+        final int producers = 3;
+        int[] items_consumer = {4, 5, 6, 7};
+        int[] items_producer = {7, 8, 7};
+        Manager manager = new Manager(storageSize);
 
-        Manage manage = new Manage(manageCapacity);
-
-        // Створюємо та запускаємо потоки продюсерів
-        for (int i = 0; i < totalProducers; i++) {
-            Thread producerThread = new Thread(new Producer(manage, totalProducts));
-            producerThread.start();
+        for(int i=0; i<consumers; i++){
+            new Consumer(items_consumer[i], manager, i);
+        }
+        for(int i=0; i<producers; i++){
+            new Producer(items_producer[i], manager, i);
         }
 
-        // Створюємо та запускаємо потоки консюмерів
-        for (int i = 0; i < totalConsumers; i++) {
-            Thread consumerThread = new Thread(new Consumer(manage, totalProducts));
-            consumerThread.start();
-        }
     }
 }
