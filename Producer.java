@@ -1,21 +1,32 @@
-class Producer implements Runnable {
-    private final Manage manage;
-    private final int totalProducts;
+public class Producer implements Runnable{
+    private final int itemNumbers;
+    private final Manager manager;
+    private final  int id;
 
-    public Producer(Manage manage, int totalProducts) {
-        this.manage = manage;
-        this.totalProducts = totalProducts;
+
+    public Producer(int itemNumbers, Manager manager, int id) {
+        this.itemNumbers = itemNumbers;
+        this.manager = manager;
+        this.id = id;
+
+        new Thread(this).start();
     }
 
     @Override
     public void run() {
-        try {
-            for (int i = 0; i < totalProducts; i++) {
-                manage.produce(i);
-                Thread.sleep(100); // Simulating production time
+        for (int i = 0; i < itemNumbers; i++) {
+            try {
+                manager.full.acquire();
+                manager.access.acquire();
+
+                manager.storage.add("item " + i + " id:" + id);
+                System.out.println("Producer "+id + " Added item " + i);
+
+                manager.access.release();
+                manager.empty.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }
