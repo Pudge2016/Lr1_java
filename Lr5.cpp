@@ -5,7 +5,7 @@ using namespace std;
 
 const int arr_size = 20000;
 
-int arr[arr_size][arr_size];
+int arr[arr_size][5];
 
 void init_arr();
 long long part_sum(int, int, int);
